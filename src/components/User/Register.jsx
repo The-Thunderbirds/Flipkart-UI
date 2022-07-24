@@ -26,9 +26,10 @@ const Register = () => {
         gender: "",
         password: "",
         cpassword: "",
+        phone: "",
     });
 
-    const { name, email, gender, password, cpassword } = user;
+    const { name, email, gender, password, cpassword, phone } = user;
 
     const [avatar, setAvatar] = useState();
     const [avatarPreview, setAvatarPreview] = useState("preview.png");
@@ -51,6 +52,7 @@ const Register = () => {
         const formData = new FormData();
         formData.set("name", name);
         formData.set("email", email);
+        formData.set("mobile_number", phone);
         formData.set("gender", gender);
         formData.set("password", password);
         formData.set("avatar", avatar);
@@ -130,6 +132,16 @@ const Register = () => {
                                         type="email"
                                         name="email"
                                         value={email}
+                                        onChange={handleDataChange}
+                                        required
+                                    />
+                                    <TextField
+                                        fullWidth
+                                        id="phone"
+                                        label="Phone"
+                                        type="tel"
+                                        name="phone"
+                                        value={phone}
                                         onChange={handleDataChange}
                                         required
                                     />
