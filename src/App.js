@@ -198,7 +198,7 @@ function App() {
         } ></Route>
 
         <Route path="/admin/new_product" element={
-          <ProtectedRoute isAdmin={true}>
+          <ProtectedRoute isAdmin={false}>
             <Dashboard activeTab={3}>
               <NewProduct />
             </Dashboard>
