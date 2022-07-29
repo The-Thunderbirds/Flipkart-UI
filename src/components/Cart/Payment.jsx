@@ -10,19 +10,19 @@ import Stepper from './Stepper';
 //     useStripe,
 //     useElements,
 // } from '@stripe/react-stripe-js';
-import { clearErrors } from '../../actions/orderAction';
+import { clearErrors, newOrder } from '../../actions/orderAction';
 import { useSnackbar } from 'notistack';
-import { post } from '../../utils/paytmForm';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import MetaData from '../Layouts/MetaData';
-
+import { useNavigate } from 'react-router-dom';
+import { emptyCart } from '../../actions/cartAction';
 const Payment = () => {
 
     const dispatch = useDispatch();
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     // const stripe = useStripe();
     // const elements = useElements();
@@ -36,83 +36,43 @@ const Payment = () => {
 
     const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-    const paymentData = {
-        amount: Math.round(totalPrice),
-        email: user.email,
-        phoneNo: shippingInfo.phoneNo,
-    };
 
-    // const order = {
-    //     shippingInfo,
-    //     orderItems: cartItems,
-    //     totalPrice,
-    // }
+    const orderData = {
+        shippingInfo,
+        orderItems: cartItems,
+        totalPrice,
+    }
 
     const submitHandler = async (e) => {
         e.preventDefault();
 
         // paymentBtn.current.disabled = true;
         setPayDisable(true);
-
+//
+        console.log(cartItems);
+        const serialNum = cartItems[0].serialNum;
+        const user_wallet_address = user.public_key_hash;
         try {
-            const config = {
-                headers: {
-                    "Content-Type": "application/json",
-                },
+
+            orderData.paymentInfo = {
+                id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+                status: "TXN_SUCCESS",
             };
 
-            const { data } = await axios.post(
-                '/api/v1/payment/process',
-                paymentData,
-                config,
-            );
+            dispatch(newOrder(orderData));
 
-            let info = {
-                action: "https://securegw-stage.paytm.in/order/process",
-                params: data.paytmParams
-            }
-
-            post(info)
-
-            // if (!stripe || !elements) return;
-
-            // const result = await stripe.confirmCardPayment(client_secret, {
-            //     payment_method: {
-            //         card: elements.getElement(CardNumberElement),
-            //         billing_details: {
-            //             name: user.name,
-            //             email: user.email,
-            //             address: {
-            //                 line1: shippingInfo.address,
-            //                 city: shippingInfo.city,
-            //                 country: shippingInfo.country,
-            //                 state: shippingInfo.state,
-            //                 postal_code: shippingInfo.pincode,
-            //             },
-            //         },
-            //     },
-            // });
-
-            // if (result.error) {
-            //     paymentBtn.current.disabled = false;
-            //     enqueueSnackbar(result.error.message, { variant: "error" });
-            // } else {
-            //     if (result.paymentIntent.status === "succeeded") {
-
-            //         order.paymentInfo = {
-            //             id: result.paymentIntent.id,
-            //             status: result.paymentIntent.status,
-            //         };
-
-            //         dispatch(newOrder(order));
-            //         dispatch(emptyCart());
-
-            //         navigate("/order/success");
-            //     } else {
-            //         enqueueSnackbar("Processing Payment Failed!", { variant: "error" });
-            //     }
-            // }
-
+            enqueueSnackbar("Order Placed", { variant: "success" });
+            dispatch(emptyCart());
+            navigate("/orders/success");
+            
+            // const { buy_data } = await axios.post(
+            //     '/api/v1/buy-item',
+            //     {serialNum: serialNum, user_wallet_address: user_wallet_address},
+            //     config,
+            // );
+                
+            // console.log(buy_data);
+        
         } catch (error) {
             // paymentBtn.current.disabled = false;
             setPayDisable(false);
