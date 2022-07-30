@@ -92,19 +92,19 @@ const OrderDetails = () => {
                                             <h3 className="font-medium text-lg">NFT Details</h3>
                                             <h4 className="font-medium">NFT ID: {product.nft_id}</h4>
                                             <p className="font-medium">NFT Type: {" "} 
-                                            {nftType === "0" && "Bronze"} 
-                                            {nftType === "1" && "Silver"} 
-                                            {nftType === "2" && "Gold"} 
-                                            {nftType === "3" && "Diamond"} 
+                                            {nftType === "3" && "Bronze"} 
+                                            {nftType === "2" && "Silver"} 
+                                            {nftType === "1" && "Gold"} 
+                                            {nftType === "0" && "Diamond"} 
                                             </p>
                                             <div className="w-full sm:w-32 h-32">
-                                            {nftType === "0" && 
-                                            <img draggable="false" className="h-full w-full object-contain" alt="nft-type" src= {BronzeApe}/>} 
-                                            {nftType === "1" && 
-                                            <img draggable="false" className="h-full w-full object-contain" alt="nft-type" src= {SilverApe}/>} 
-                                            {nftType === "2" && 
-                                            <img draggable="false" className="h-full w-full object-contain" alt="nft-type" src= {GoldApe}/>} 
                                             {nftType === "3" && 
+                                            <img draggable="false" className="h-full w-full object-contain" alt="nft-type" src= {BronzeApe}/>} 
+                                            {nftType === "2" && 
+                                            <img draggable="false" className="h-full w-full object-contain" alt="nft-type" src= {SilverApe}/>} 
+                                            {nftType === "1" && 
+                                            <img draggable="false" className="h-full w-full object-contain" alt="nft-type" src= {GoldApe}/>} 
+                                            {nftType === "0" && 
                                             <img draggable="false" className="h-full w-full object-contain" alt="nft-type" src= {DiamondApe}/>}                                                 
                                             </div>
                                                 <Link  className="text-sm text-primary-blue font-medium  cursor-pointer" to = '/'>Click here to view your NFT on the blockchain</Link>
