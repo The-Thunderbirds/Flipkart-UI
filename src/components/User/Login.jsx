@@ -32,7 +32,7 @@ const Login = () => {
             dispatch(clearErrors());
         }
         if (isAuthenticated) {
-            navigate(`/${redirect}`)
+            navigate('/')
         }
     }, [dispatch, error, isAuthenticated, redirect, navigate, enqueueSnackbar]);
 

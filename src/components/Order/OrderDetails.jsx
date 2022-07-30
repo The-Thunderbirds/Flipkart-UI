@@ -12,8 +12,8 @@ import axios from "axios";
 import { MINTKART_CONTRACT_ADDRESS } from "../../constant";
 import BronzeApe from '../../assets/images/nfts/bronze.jpeg';
 import SilverApe from '../../assets/images/nfts/silver.jpg';
-import GoldApe from '../../assets/images/nfts/gold.jpeg';
-import DiamondApe from '../../assets/images/nfts/diamond.jpeg';
+import GoldApe from '../../assets/images/nfts/gold.png';
+import DiamondApe from '../../assets/images/nfts/diamond.png';
 
 const OrderDetails = () => {
 
