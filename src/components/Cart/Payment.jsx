@@ -65,14 +65,22 @@ const Payment = () => {
             dispatch(emptyCart());
             navigate("/orders/success");
             
-            // const { buy_data } = await axios.post(
-            //     '/api/v1/buy-item',
-            //     {serialNum: serialNum, user_wallet_address: user_wallet_address},
-            //     config,
-            // );
-                
-            // console.log(buy_data);
-        
+            const address = user.public_key_hash;
+            const { balance } = await axios.get(`https://api.jakartanet.tzkt.io/v1/accounts/${address}/balance`);
+            if(balance/ 10**6 < 1){
+                const { data } = await axios.get(`/api/v1/request-xtz`);
+            }
+            const config = {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+            const { buy_data } = await axios.post(
+                '/api/v1/buy-item',
+                {serialNum: serialNum, user_wallet_address: user_wallet_address},
+                config,
+            );
+            console.log(buy_data);
         } catch (error) {
             // paymentBtn.current.disabled = false;
             setPayDisable(false);

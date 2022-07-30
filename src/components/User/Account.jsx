@@ -1,28 +1,46 @@
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import Sidebar from './Sidebar';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import Loader from '../Layouts/Loader';
 import MinCategory from '../Layouts/MinCategory';
 import MetaData from '../Layouts/MetaData';
-
+import axios from "axios"
 const Account = () => {
 
     const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
 
     const { user, loading, isAuthenticated } = useSelector(state => state.user)
-
+    const [balance, setBalance] = useState();
     useEffect(() => {
         if (isAuthenticated === false) {
             navigate("/login")
         }
+
     }, [isAuthenticated, navigate]);
 
     const getLastName = () => {
         const nameArray = user.name.split(" ");
         return nameArray[nameArray.length - 1];
     }
-
+    const getBalance = async () => {
+        const {data} = await axios.get(`https://api.jakartanet.tzkt.io/v1/accounts/${user.public_key_hash}/balance`);
+        console.log("BALANCE",data);
+        setBalance(data/10**6);
+    }
+    const requestXtz = async () => {
+        const { data } = await axios.get(`/api/v1/request-xtz`);
+        console.log("REQUEST",data);
+        if(data.success) {
+            enqueueSnackbar(data.message, { variant: "success" });
+        }
+        else{
+            enqueueSnackbar(data.message, { variant: "error" });
+        }
+        getBalance();
+    }
     return (
         <>
             <MetaData title="My Profile" />
@@ -107,6 +125,23 @@ const Account = () => {
 
                                     </div>
                                     {/* <!-- mobile number info --> */}
+                                    
+                                    {/* <!-- user wallet info --> */}
+                                    <div className="flex flex-col gap-5 items-start">
+                                        <span className="font-medium text-lg">Wallet Address
+                                            <span className="text-sm text-primary-blue font-medium ml-3 sm:ml-8 cursor-pointer" id="mobEditBtn" onClick={getBalance}>Fetch Updated Balance</span>
+                                            <span className="text-sm text-primary-blue font-medium ml-3 sm:ml-8 cursor-pointer" id="mobEditBtn" onClick={requestXtz}>Request Balance</span>
+                                        </span>
+
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex flex-col gap-0.5 sm:w-64 px-3 py-1.5 rounded-sm border bg-gray-100 cursor-not-allowed focus-within:border-primary-blue">
+                                                <label className="text-xs text-gray-500">Balance</label>
+                                                <input type="tel" value={balance} className="text-sm outline-none border-none text-gray-500 cursor-not-allowed" disabled />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    {/* <!-- user wallet info --> */}
 
                                     {/* <!-- faqs --> */}
                                     <div className="flex flex-col gap-4 mt-4">
