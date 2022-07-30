@@ -1,13 +1,14 @@
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { clearErrors, getOrderDetails } from '../../actions/orderAction';
 import Loader from '../Layouts/Loader';
 import TrackStepper from './TrackStepper';
 import MinCategory from '../Layouts/MinCategory';
 import MetaData from '../Layouts/MetaData';
-
+import { getProductDetails } from '../../actions/productAction';
+import bronze from '../../assets/images/nfts/bronze.jpeg'
 const OrderDetails = () => {
 
     const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const OrderDetails = () => {
     const params = useParams();
 
     const { order, error, loading } = useSelector((state) => state.orderDetails);
+    const { product } = useSelector((state) => state.productDetails);
 
     useEffect(() => {
         if (error) {
@@ -24,6 +26,12 @@ const OrderDetails = () => {
         dispatch(getOrderDetails(params.id));
     }, [dispatch, error, params.id, enqueueSnackbar]);
 
+    useEffect(() => {
+        if(order && order.orderItems){
+            dispatch(getProductDetails(order.orderItems[0].product));
+        }
+    }, [dispatch,order])
+    
     return (
         <>
             <MetaData title="Order Details | Flipkart" />
@@ -49,6 +57,18 @@ const OrderDetails = () => {
                                                 <p className="font-medium">Phone Number</p>
                                                 <p>{order.shippingInfo.phoneNo}</p>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div className="sm:w-1/2 border-r">
+                                        <div className="flex flex-col gap-3 my-8 mx-10">
+                                            <h3 className="font-medium text-lg">NFT Details</h3>
+                                            <h4 className="font-medium">NFT ID: {product.nft_id}</h4>
+                                            <p className="font-medium">NFT Type: Bronze </p>
+                                            <div className="w-full sm:w-32 h-32">
+                                                    <img draggable="false" className="h-full w-full object-contain" src={bronze} alt="" />
+                                            </div>
+                                                <Link  className="text-sm text-primary-blue font-medium  cursor-pointer" to = '/'>Click here to view your NFT on the blockchain</Link>
+
                                         </div>
                                     </div>
                                 </div>
