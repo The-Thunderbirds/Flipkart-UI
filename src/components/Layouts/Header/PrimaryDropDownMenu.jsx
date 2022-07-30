@@ -47,6 +47,11 @@ const PrimaryDropDownMenu = ({ setTogglePrimaryDropDown, user }) => {
             redirect: "/orders",
         },
         {
+            title: "NFT Collection",
+            icon: <ShoppingBagIcon sx={{ fontSize: "18px" }} />,
+            redirect: "/collection",
+        },
+        {
             title: "Wishlist",
             icon: <FavoriteIcon sx={{ fontSize: "18px" }} />,
             redirect: "/wishlist",

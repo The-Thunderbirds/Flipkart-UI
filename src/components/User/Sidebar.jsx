@@ -53,7 +53,15 @@ const Sidebar = ({ activeTab }) => {
                     </Link>
                 </div>
                 {/* <!-- my orders tab --> */}
-
+                {/* <!-- my collection tab --> */}
+                <div className="flex items-center gap-5 px-4 py-4 border-b">
+                    <span className="text-primary-blue"><FolderIcon /></span>
+                    <Link className={`${activeTab === "collection" ? "flex w-full justify-between bg-blue-50 text-primary-blue font-medium" : "flex w-full justify-between font-medium text-gray-500 hover:text-primary-blue"} `} to="/collection">
+                        MY NFT COLLECTION
+                        <span><ChevronRightIcon /></span>
+                    </Link>
+                </div>
+                {/* <!-- my collection tab --> */}
                 {/* <!-- account settings tab --> */}
                 <div className="flex items-center gap-5 px-4 py-4">
                     <span className="text-primary-blue"><PersonIcon /></span>

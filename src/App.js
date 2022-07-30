@@ -23,6 +23,7 @@ import Payment from './components/Cart/Payment';
 import OrderStatus from './components/Cart/OrderStatus';
 import OrderSuccess from './components/Cart/OrderSuccess';
 import MyOrders from './components/Order/MyOrders';
+import MyCollection from './components/Order/MyCollection';
 import OrderDetails from './components/Order/OrderDetails';
 import Dashboard from './components/Admin/Dashboard';
 import MainData from './components/Admin/MainData';
@@ -128,6 +129,12 @@ function App() {
         <Route path="/orders" element={
           <ProtectedRoute>
             <MyOrders />
+          </ProtectedRoute>
+        }></Route>
+
+        <Route path="/collection" element={
+          <ProtectedRoute>
+            <MyCollection />
           </ProtectedRoute>
         }></Route>
 
