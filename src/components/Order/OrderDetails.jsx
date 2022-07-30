@@ -1,5 +1,5 @@
 import { useSnackbar } from 'notistack';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { clearErrors, getOrderDetails } from '../../actions/orderAction';
@@ -8,15 +8,23 @@ import TrackStepper from './TrackStepper';
 import MinCategory from '../Layouts/MinCategory';
 import MetaData from '../Layouts/MetaData';
 import { getProductDetails } from '../../actions/productAction';
-import bronze from '../../assets/images/nfts/bronze.jpeg'
+import axios from "axios";
+import { MINTKART_CONTRACT_ADDRESS } from "../../constant";
+import BronzeApe from '../../assets/images/nfts/bronze.jpeg';
+import SilverApe from '../../assets/images/nfts/silver.jpg';
+import GoldApe from '../../assets/images/nfts/gold.jpeg';
+import DiamondApe from '../../assets/images/nfts/diamond.jpeg';
+
 const OrderDetails = () => {
 
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const params = useParams();
-
+    
     const { order, error, loading } = useSelector((state) => state.orderDetails);
     const { product } = useSelector((state) => state.productDetails);
+
+    const [nftType, setNftType] = useState(-1);
 
     useEffect(() => {
         if (error) {
@@ -25,12 +33,21 @@ const OrderDetails = () => {
         }
         dispatch(getOrderDetails(params.id));
     }, [dispatch, error, params.id, enqueueSnackbar]);
-
+    
     useEffect(() => {
+        const fetchNFTType = async () => {
+            const response = await axios.get(`https://api.jakartanet.tzkt.io/v1/contracts/${MINTKART_CONTRACT_ADDRESS}/storage`);
+            const id = response.data.warranties;
+            const key = product.nft_id;            
+            const { data } = await axios.get(`https://api.jakartanet.tzkt.io/v1/bigmaps/${id}/keys/${key}`);
+            setNftType(data.value.type);
+        }
         if(order && order.orderItems){
             dispatch(getProductDetails(order.orderItems[0].product));
+            fetchNFTType();
         }
     }, [dispatch,order])
+
     
     return (
         <>
@@ -63,9 +80,21 @@ const OrderDetails = () => {
                                         <div className="flex flex-col gap-3 my-8 mx-10">
                                             <h3 className="font-medium text-lg">NFT Details</h3>
                                             <h4 className="font-medium">NFT ID: {product.nft_id}</h4>
-                                            <p className="font-medium">NFT Type: Bronze </p>
+                                            <p className="font-medium">NFT Type: {" "} 
+                                            {nftType === "0" && "Bronze"} 
+                                            {nftType === "1" && "Silver"} 
+                                            {nftType === "2" && "Gold"} 
+                                            {nftType === "3" && "Diamond"} 
+                                            </p>
                                             <div className="w-full sm:w-32 h-32">
-                                                    <img draggable="false" className="h-full w-full object-contain" src={bronze} alt="" />
+                                            {nftType === "0" && 
+                                            <img draggable="false" className="h-full w-full object-contain" alt="nft-type" src= {BronzeApe}/>} 
+                                            {nftType === "1" && 
+                                            <img draggable="false" className="h-full w-full object-contain" alt="nft-type" src= {SilverApe}/>} 
+                                            {nftType === "2" && 
+                                            <img draggable="false" className="h-full w-full object-contain" alt="nft-type" src= {GoldApe}/>} 
+                                            {nftType === "3" && 
+                                            <img draggable="false" className="h-full w-full object-contain" alt="nft-type" src= {DiamondApe}/>}                                                 
                                             </div>
                                                 <Link  className="text-sm text-primary-blue font-medium  cursor-pointer" to = '/'>Click here to view your NFT on the blockchain</Link>
 
