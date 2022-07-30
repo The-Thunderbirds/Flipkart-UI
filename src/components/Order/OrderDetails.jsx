@@ -35,18 +35,28 @@ const OrderDetails = () => {
     }, [dispatch, error, params.id, enqueueSnackbar]);
     
     useEffect(() => {
-        const fetchNFTType = async () => {
-            const response = await axios.get(`https://api.jakartanet.tzkt.io/v1/contracts/${MINTKART_CONTRACT_ADDRESS}/storage`);
-            const id = response.data.warranties;
-            const key = product.nft_id;            
-            const { data } = await axios.get(`https://api.jakartanet.tzkt.io/v1/bigmaps/${id}/keys/${key}`);
-            setNftType(data.value.type);
-        }
         if(order && order.orderItems){
             dispatch(getProductDetails(order.orderItems[0].product));
-            fetchNFTType();
         }
     }, [dispatch,order])
+
+    useEffect(() => {
+        const fetchNFTType = async (nftId) => {
+            try {
+                const response = await axios.get(`https://api.jakartanet.tzkt.io/v1/contracts/${MINTKART_CONTRACT_ADDRESS}/storage`);
+                const id = response.data.warranties;
+                const key = nftId;
+                const { data } = await axios.get(`https://api.jakartanet.tzkt.io/v1/bigmaps/${id}/keys/${key}`);
+                setNftType(data.value.type);
+            } catch(e) {
+                console.log(e);
+            }
+        }
+        if(product && product.nft_id !== "") {
+            fetchNFTType(product.nft_id);
+        }
+        return () => {};
+    }, [dispatch, product])
 
     
     return (
@@ -76,6 +86,7 @@ const OrderDetails = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    {product.nft_id !== "" &&
                                     <div className="sm:w-1/2 border-r">
                                         <div className="flex flex-col gap-3 my-8 mx-10">
                                             <h3 className="font-medium text-lg">NFT Details</h3>
@@ -100,6 +111,7 @@ const OrderDetails = () => {
 
                                         </div>
                                     </div>
+                                    }
                                 </div>
 
                                 {order.orderItems && order.orderItems.map((item) => {
