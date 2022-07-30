@@ -7,6 +7,9 @@ import Loader from '../Layouts/Loader';
 import MinCategory from '../Layouts/MinCategory';
 import MetaData from '../Layouts/MetaData';
 import axios from "axios"
+import CircularProgress from '@mui/material/CircularProgress';
+
+
 const Account = () => {
 
     const navigate = useNavigate();
@@ -14,11 +17,13 @@ const Account = () => {
 
     const { user, loading, isAuthenticated } = useSelector(state => state.user)
     const [balance, setBalance] = useState();
+    const [reqLoad, setReqLoad] = useState(false);
+
     useEffect(() => {
         if (isAuthenticated === false) {
             navigate("/login")
         }
-
+        getBalance();
     }, [isAuthenticated, navigate]);
 
     const getLastName = () => {
@@ -27,14 +32,17 @@ const Account = () => {
     }
     const getBalance = async () => {
         const {data} = await axios.get(`https://api.jakartanet.tzkt.io/v1/accounts/${user.public_key_hash}/balance`);
-        console.log("BALANCE",data);
         setBalance(data/10**6);
     }
     const requestXtz = async () => {
-        const { data } = await axios.get(`/api/v1/request-xtz`);
-        console.log("REQUEST",data);
+        setReqLoad(true);
+        const { data } = await axios.get(`/api/v1/request-xtz`);  
         if(data.success) {
-            enqueueSnackbar(data.message, { variant: "success" });
+            setReqLoad(false);
+            enqueueSnackbar("Request for ꜩ has been sent successfully", { variant: "success" });
+            setTimeout(()=>{
+            enqueueSnackbar("Please have patience. It takes few second to process ꜩ request. Thanks!", { variant: "success" });
+            }, 1000);
         }
         else{
             enqueueSnackbar(data.message, { variant: "error" });
@@ -130,13 +138,14 @@ const Account = () => {
                                     <div className="flex flex-col gap-5 items-start">
                                         <span className="font-medium text-lg">Wallet Address
                                             <span className="text-sm text-primary-blue font-medium ml-3 sm:ml-8 cursor-pointer" id="mobEditBtn" onClick={getBalance}>Fetch Updated Balance</span>
-                                            <span className="text-sm text-primary-blue font-medium ml-3 sm:ml-8 cursor-pointer" id="mobEditBtn" onClick={requestXtz}>Request Balance</span>
+                                            <span className="text-sm text-primary-blue font-medium ml-3 sm:ml-8 cursor-pointer" id="mobEditBtn" onClick={requestXtz}>Request Balance &nbsp;
+                                            {reqLoad && <CircularProgress size={10}/>}</span>
                                         </span>
 
                                         <div className="flex items-center gap-3">
                                             <div className="flex flex-col gap-0.5 sm:w-64 px-3 py-1.5 rounded-sm border bg-gray-100 cursor-not-allowed focus-within:border-primary-blue">
                                                 <label className="text-xs text-gray-500">Balance</label>
-                                                <input type="tel" value={balance} className="text-sm outline-none border-none text-gray-500 cursor-not-allowed" disabled />
+                                                <input type="tel" value={balance + " ꜩ"} className="text-sm outline-none border-none text-gray-500 cursor-not-allowed" disabled />
                                             </div>
                                         </div>
 
