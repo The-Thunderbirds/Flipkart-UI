@@ -9,7 +9,7 @@ import MinCategory from '../Layouts/MinCategory';
 import MetaData from '../Layouts/MetaData';
 import { getProductDetails } from '../../actions/productAction';
 import axios from "axios";
-import { MINTKART_CONTRACT_ADDRESS } from "../../constant";
+import { FA2_CONTRACT_ADDRESS, MINTKART_CONTRACT_ADDRESS } from "../../constant";
 import BronzeApe from '../../assets/images/nfts/bronze.jpeg';
 import SilverApe from '../../assets/images/nfts/silver.jpg';
 import GoldApe from '../../assets/images/nfts/gold.png';
@@ -107,7 +107,7 @@ const OrderDetails = () => {
                                             {nftType === "0" && 
                                             <img draggable="false" className="h-full w-full object-contain" alt="nft-type" src= {DiamondApe}/>}                                                 
                                             </div>
-                                                <Link  className="text-sm text-primary-blue font-medium  cursor-pointer" to = '/'>Click here to view your NFT on the blockchain</Link>
+                                                <Link  className="text-sm text-primary-blue font-medium  cursor-pointer" to = {'https://jakarta.tzstats.com/'+FA2_CONTRACT_ADDRESS}>Click here to view your NFT on the blockchain</Link>
 
                                         </div>
                                     </div>
