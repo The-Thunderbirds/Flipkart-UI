@@ -62,6 +62,7 @@ const Payment = () => {
             dispatch(newOrder(orderData));
 
             enqueueSnackbar("Order Placed", { variant: "success" });
+            enqueueSnackbar("Your warranty NFT has been transferred to you! Please check details in Orders!", { variant: "success" });
             dispatch(emptyCart());
             navigate("/orders/success");
             
