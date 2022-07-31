@@ -11,7 +11,7 @@ import GoldApe from '../../assets/images/nfts/gold.png';
 import DiamondApe from '../../assets/images/nfts/diamond.png';
 import { Link } from 'react-router-dom';
 import Sidebar from '../User/Sidebar';
-
+import FlashOn from '@mui/icons-material/FlashOn';
 
 const MyCollection = () => {
 
@@ -50,7 +50,7 @@ const MyCollection = () => {
             <MetaData title="My Orders | Flipkart" />
 
             <MinCategory />
-            <main className="w-full mt-16 sm:mt-0">
+            <main className="w-full mt-16 sm:mt-0"> 
 
                 {/* <!-- row --> */}
                 <div className="flex gap-3.5 sm:w-11/12 sm:mt-4 m-auto mb-7">
@@ -110,10 +110,15 @@ const MyCollection = () => {
 
                             </div>
                         )}
-
+                <button onClick={()=>alert("Feature Comig Soon")} className="p-4 mt-5 flex items-center justify-center gap-2 text-white bg-primary-orange rounded-sm shadow hover:shadow-lg m-auto">
+                            <FlashOn/>
+                            {"CLAIM NOW"}
+                        </button>
                     </div>
                     {/* <!-- orders column --> */}
+
                 </div>
+
                 {/* <!-- row --> */}
 
             </main>
